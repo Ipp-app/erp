@@ -18,7 +18,7 @@ interface MachineDowntime {
   reported_by: string;
   status: string;
   notes: string;
-  machines?: { name: string } | null; // For joining machine name
+  // machines?: { name: string } | null; // Removed for now due to potential DB relation issue
 }
 
 interface Machine {
@@ -42,7 +42,8 @@ export default function MachineDowntime() {
     handleDelete
   } = useCRUD<MachineDowntime>({
     table: 'machine_downtime',
-    columns: 'id, machine_id, downtime_start, downtime_end, duration_minutes, reason, action_taken, reported_by, status, notes, machines(name, machine_code)', // Fetch machine name
+    // Removed 'machines(name, machine_code)' from columns to fix 400 error
+    columns: 'id, machine_id, downtime_start, downtime_end, duration_minutes, reason, action_taken, reported_by, status, notes', 
     rolePermissions: ['admin', 'production_manager', 'maintenance_staff']
   });
 
@@ -66,8 +67,8 @@ export default function MachineDowntime() {
   const columns = [
     { 
       key: 'machine_id' as keyof MachineDowntime, 
-      label: 'Machine',
-      render: (value: string, item: MachineDowntime) => item.machines?.name || value
+      label: 'Machine ID', // Changed label to reflect showing ID
+      // render: (value: string, item: MachineDowntime) => item.machines?.name || value // Removed render for machine name
     },
     { 
       key: 'downtime_start' as keyof MachineDowntime, 
@@ -133,7 +134,6 @@ export default function MachineDowntime() {
           onValueChange={value => setForm(f => ({ ...f, machine_id: value }))}
           className="mb-2"
           placeholder="Select Machine"
-          // Removed 'required' prop
         >
           {machines.map(machine => (
             <SelectItem key={machine.id} value={machine.id}>
