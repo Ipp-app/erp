@@ -34,7 +34,8 @@ export default function Containers() {
     handleDelete
   } = useCRUD<Container>({
     table: 'containers',
-    columns: 'id, container_code, container_type, capacity_unit, capacity_value, current_fill_level, status, location, last_cleaned_date, notes',
+    // Sederhanakan query untuk debugging
+    columns: 'id, container_code, status',
     rolePermissions: ['admin', 'warehouse_staff']
   });
 

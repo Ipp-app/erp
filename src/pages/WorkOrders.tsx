@@ -61,7 +61,8 @@ export default function WorkOrders() {
     handleDelete
   } = useCRUD<WorkOrder>({
     table: 'work_orders',
-    columns: 'id, work_order_number, order_type, description, machine_id, mold_id, product_id, priority_level, status, assigned_to, scheduled_start_date, scheduled_end_date, actual_start_date, actual_end_date, notes, machines(name, machine_code), molds(name, mold_code), products(name, product_code)',
+    // Sederhanakan query untuk debugging
+    columns: 'id, work_order_number, status',
     rolePermissions: ['admin', 'maintenance_staff', 'production_manager']
   });
 

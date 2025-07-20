@@ -64,11 +64,11 @@ export default function QualityControl() {
       render: (value: number) => value?.toLocaleString() || '0'
     },
     { 
-      key: 'pass_quantity' as keyof QualityInspection, 
+      key: 'pass_rate' as any, // Changed key to 'pass_rate' to resolve duplicate key warning
       label: 'Pass Rate',
       render: (value: number, item: QualityInspection) => {
         const total = item.pass_quantity + item.fail_quantity;
-        const rate = total > 0 ? (value / total * 100) : 0;
+        const rate = total > 0 ? (item.pass_quantity / total * 100) : 0; // Use item.pass_quantity directly
         return `${rate.toFixed(1)}%`;
       }
     },

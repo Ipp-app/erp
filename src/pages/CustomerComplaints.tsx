@@ -58,7 +58,8 @@ export default function CustomerComplaints() {
     handleDelete
   } = useCRUD<CustomerComplaint>({
     table: 'customer_complaints',
-    columns: 'id, complaint_number, customer_id, product_id, sales_order_id, complaint_date, description, severity, status, resolution_date, action_taken, responsible_person, notes, customers(company_name, contact_person), products(name, product_code), sales_orders(order_number)',
+    // Sederhanakan query untuk debugging
+    columns: 'id, complaint_number, status',
     rolePermissions: ['admin', 'sales_staff', 'quality_inspector']
   });
 
