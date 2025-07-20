@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  X, Home, Users, BarChart3, Settings, LogOut, ChevronDown, Moon, Sun, Palette, Bell, Search, Plus, TrendingUp, Activity, Shield, Zap, Eye, EyeOff, Boxes, ShoppingCart, UserCheck, BarChart2, Cpu, Layers, Package, Warehouse, ShieldCheck, UsersRound
+  X, Home, Users, BarChart3, Settings, LogOut, ChevronDown, Moon, Sun, Palette, Bell, Search, Plus, TrendingUp, Activity, Shield, Zap, Eye, EyeOff, Boxes, ShoppingCart, UserCheck, BarChart2, Cpu, Layers, Package, Warehouse, ShieldCheck, UsersRound, Truck, TimerOff, Container, CalendarCheck, DollarSign, MessageSquareWarning, ClipboardCheck, Box
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme, themesConfig } from './ui/GlobalUI';
@@ -11,16 +11,24 @@ const menuItems = [
   { icon: Home, label: 'Dashboard', to: '/dashboard' },
   { icon: Users, label: 'Users', to: '/users' },
   { icon: Cpu, label: 'Machines', to: '/machines' },
+  { icon: TimerOff, label: 'Machine Downtime', to: '/machine-downtime' }, // Changed to TimerOff
   { icon: Layers, label: 'Molds', to: '/molds' },
   { icon: Package, label: 'Products', to: '/products' },
   { icon: Boxes, label: 'Raw Materials', to: '/raw-materials' },
+  { icon: Container, label: 'Material Batches', to: '/material-batches' }, // New
   { icon: BarChart3, label: 'Production Orders', to: '/production-orders' },
+  { icon: CalendarCheck, label: 'Daily Schedule', to: '/daily-production-schedule' }, // New
+  { icon: DollarSign, label: 'Production Costs', to: '/production-costs' }, // New
   { icon: Warehouse, label: 'Finished Goods', to: '/finished-goods' },
   { icon: UsersRound, label: 'Customers', to: '/customers' },
+  { icon: MessageSquareWarning, label: 'Complaints', to: '/customer-complaints' }, // New
   { icon: ShoppingCart, label: 'Sales Orders', to: '/sales-orders' },
   { icon: ShieldCheck, label: 'Quality Control', to: '/quality-control' },
   { icon: Activity, label: 'Maintenance', to: '/maintenance' },
   { icon: TrendingUp, label: 'Purchase Orders', to: '/purchase-orders' },
+  { icon: Truck, label: 'Suppliers', to: '/suppliers' }, // New
+  { icon: ClipboardCheck, label: 'Work Orders', to: '/work-orders' }, // New
+  { icon: Box, label: 'Containers', to: '/containers' }, // New
   { icon: BarChart2, label: 'Reports', to: '/reports' },
   { icon: Settings, label: 'Settings', to: '/settings' }
 ];
@@ -29,16 +37,24 @@ const menuTitles: Record<string, string> = {
   '/dashboard': 'Dashboard',
   '/users': 'Users Management',
   '/machines': 'Machines Management',
+  '/machine-downtime': 'Machine Downtime', // New
   '/molds': 'Molds Management',
   '/products': 'Products Management',
   '/raw-materials': 'Raw Materials Management',
+  '/material-batches': 'Material Batches', // New
   '/production-orders': 'Production Orders',
+  '/daily-production-schedule': 'Daily Production Schedule', // New
+  '/production-costs': 'Production Costs', // New
   '/finished-goods': 'Finished Goods Inventory',
   '/customers': 'Customers Management',
+  '/customer-complaints': 'Customer Complaints', // New
   '/sales-orders': 'Sales Orders',
   '/quality-control': 'Quality Control',
   '/maintenance': 'Maintenance Schedule',
   '/purchase-orders': 'Purchase Orders',
+  '/suppliers': 'Suppliers Management', // New
+  '/work-orders': 'Work Orders', // New
+  '/containers': 'Containers Management', // New
   '/reports': 'Reports & Analytics',
   '/settings': 'System Settings',
   // Legacy routes
@@ -135,7 +151,7 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
             )}
           </div>
         </div>
-        
+
         {/* Menu Items */}
         <div className="flex-1 overflow-y-auto p-4">
           <nav className="space-y-2">
@@ -170,7 +186,7 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
             })}
           </nav>
         </div>
-        
+
         {/* Logout */}
         <div className="p-4 border-t" style={{ borderColor: currentThemeData.border }}>
           <div
@@ -209,27 +225,27 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
             {/* Light/Dark Mode Toggle */}
             <ThemedButton
               onClick={() => setIsLightMode(!isLightMode)}
-              style={{ 
-                color: currentThemeData.textSecondary, 
-                background: 'none', 
-                border: 'none', 
-                padding: 8, 
-                borderRadius: 8 
+              style={{
+                color: currentThemeData.textSecondary,
+                background: 'none',
+                border: 'none',
+                padding: 8,
+                borderRadius: 8
               }}
             >
               {isLightMode ? <Moon size={20} /> : <Sun size={20} />}
             </ThemedButton>
-            
+
             {/* Theme Selector */}
             <div className="relative">
               <ThemedButton
                 onClick={() => setShowThemeDropdown(!showThemeDropdown)}
-                style={{ 
-                  color: currentThemeData.textSecondary, 
-                  background: 'none', 
-                  border: 'none', 
-                  padding: 8, 
-                  borderRadius: 8 
+                style={{
+                  color: currentThemeData.textSecondary,
+                  background: 'none',
+                  border: 'none',
+                  padding: 8,
+                  borderRadius: 8
                 }}
               >
                 <Palette size={20} />
@@ -263,10 +279,10 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
                       >
                         <div
                           className="w-4 h-4 rounded-full"
-                          style={{ 
-                            background: theme.primary, 
-                            display: 'inline-block', 
-                            marginRight: 8 
+                          style={{
+                            background: theme.primary,
+                            display: 'inline-block',
+                            marginRight: 8
                           }}
                         />
                         {theme.name}
@@ -276,16 +292,16 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
                 </div>
               )}
             </div>
-            
+
             {/* Notifications */}
             <ThemedButton
-              style={{ 
-                color: currentThemeData.textSecondary, 
-                background: 'none', 
-                border: 'none', 
-                padding: 8, 
-                borderRadius: 8, 
-                position: 'relative' 
+              style={{
+                color: currentThemeData.textSecondary,
+                background: 'none',
+                border: 'none',
+                padding: 8,
+                borderRadius: 8,
+                position: 'relative'
               }}
             >
               <Bell size={20} />
@@ -294,20 +310,20 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
                 style={{ background: currentThemeData.accent }}
               />
             </ThemedButton>
-            
+
             {/* Profile Dropdown */}
             <div className="relative" ref={profileDropdownRef}>
               <ThemedButton
                 onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                style={{ 
-                  color: currentThemeData.text, 
-                  background: 'none', 
-                  border: 'none', 
-                  padding: 8, 
-                  borderRadius: 8, 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: 12 
+                style={{
+                  color: currentThemeData.text,
+                  background: 'none',
+                  border: 'none',
+                  padding: 8,
+                  borderRadius: 8,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12
                 }}
               >
                 <div
@@ -340,14 +356,14 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
                     <div className="text-sm" style={{ color: currentThemeData.textSecondary }}>{userEmail}</div>
                   </div>
                   <div className="py-2">
-                    <ThemedButton 
-                      className="w-full p-2 text-left hover:bg-opacity-50 transition-all duration-200" 
+                    <ThemedButton
+                      className="w-full p-2 text-left hover:bg-opacity-50 transition-all duration-200"
                       style={{ color: currentThemeData.text }}
                     >
                       Profil
                     </ThemedButton>
-                    <ThemedButton 
-                      className="w-full p-2 text-left hover:bg-opacity-50 transition-all duration-200" 
+                    <ThemedButton
+                      className="w-full p-2 text-left hover:bg-opacity-50 transition-all duration-200"
                       style={{ color: currentThemeData.text }}
                     >
                       Pengaturan
@@ -365,7 +381,7 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
             </div>
           </div>
         </header>
-        
+
         {/* Main Content Area */}
         <main className="flex-1 overflow-auto">
           {children}

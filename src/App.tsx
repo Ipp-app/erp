@@ -20,6 +20,15 @@ import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import MaintenanceSchedule from './pages/MaintenanceSchedule';
 import PurchaseOrders from './pages/PurchaseOrders';
+import Suppliers from './pages/Suppliers';
+import MachineDowntime from './pages/MachineDowntime'; // New import
+import MaterialBatches from './pages/MaterialBatches'; // New import
+import DailyProductionSchedule from './pages/DailyProductionSchedule'; // New import
+import ProductionCosts from './pages/ProductionCosts'; // New import
+import CustomerComplaints from './pages/CustomerComplaints'; // New import
+import WorkOrders from './pages/WorkOrders'; // New import
+import Containers from './pages/Containers'; // New import
+
 
 function App() {
   const { isLoggedIn, logout, user, userRoles } = useAuth();
@@ -35,165 +44,229 @@ function App() {
     <ThemeProvider>
       <Router>
         <Routes>
-          <Route 
-            path="/" 
-            element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginScreen />} 
+          <Route
+            path="/"
+            element={isLoggedIn ? <Navigate to="/dashboard" /> : <LoginScreen />}
           />
-          <Route 
-            path="/dashboard" 
+          <Route
+            path="/dashboard"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <DashboardContent />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          
+
           {/* ERP Module Routes - All wrapped with Layout */}
-          <Route 
-            path="/users" 
+          <Route
+            path="/users"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <Users />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/machines" 
+          <Route
+            path="/machines"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <Machines />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/molds" 
+          <Route
+            path="/machine-downtime"
+            element={isLoggedIn ? (
+              <LayoutWrapper>
+                <MachineDowntime />
+              </LayoutWrapper>
+            ) : <Navigate to="/" />}
+          />
+          <Route
+            path="/molds"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <Molds />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/products" 
+          <Route
+            path="/products"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <Products />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/raw-materials" 
+          <Route
+            path="/raw-materials"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <RawMaterials />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/production-orders" 
+          <Route
+            path="/material-batches"
+            element={isLoggedIn ? (
+              <LayoutWrapper>
+                <MaterialBatches />
+              </LayoutWrapper>
+            ) : <Navigate to="/" />}
+          />
+          <Route
+            path="/production-orders"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <ProductionOrders />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/finished-goods" 
+          <Route
+            path="/daily-production-schedule"
+            element={isLoggedIn ? (
+              <LayoutWrapper>
+                <DailyProductionSchedule />
+              </LayoutWrapper>
+            ) : <Navigate to="/" />}
+          />
+          <Route
+            path="/production-costs"
+            element={isLoggedIn ? (
+              <LayoutWrapper>
+                <ProductionCosts />
+              </LayoutWrapper>
+            ) : <Navigate to="/" />}
+          />
+          <Route
+            path="/finished-goods"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <FinishedGoods />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/customers" 
+          <Route
+            path="/customers"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <Customers />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/sales-orders" 
+          <Route
+            path="/customer-complaints"
+            element={isLoggedIn ? (
+              <LayoutWrapper>
+                <CustomerComplaints />
+              </LayoutWrapper>
+            ) : <Navigate to="/" />}
+          />
+          <Route
+            path="/sales-orders"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <SalesOrders />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/quality-control" 
+          <Route
+            path="/quality-control"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <QualityControl />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/maintenance" 
+          <Route
+            path="/maintenance"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <MaintenanceSchedule />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/purchase-orders" 
+          <Route
+            path="/purchase-orders"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <PurchaseOrders />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/reports" 
+          <Route
+            path="/suppliers"
+            element={isLoggedIn ? (
+              <LayoutWrapper>
+                <Suppliers />
+              </LayoutWrapper>
+            ) : <Navigate to="/" />}
+          />
+          <Route
+            path="/work-orders"
+            element={isLoggedIn ? (
+              <LayoutWrapper>
+                <WorkOrders />
+              </LayoutWrapper>
+            ) : <Navigate to="/" />}
+          />
+          <Route
+            path="/containers"
+            element={isLoggedIn ? (
+              <LayoutWrapper>
+                <Containers />
+              </LayoutWrapper>
+            ) : <Navigate to="/" />}
+          />
+          <Route
+            path="/reports"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <Reports />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/settings" 
+          <Route
+            path="/settings"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <Settings />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          
+
           {/* Legacy routes for backward compatibility */}
-          <Route 
-            path="/production" 
+          <Route
+            path="/production"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <ProductionOrders />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/quality" 
+          <Route
+            path="/quality"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <QualityControl />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/inventory" 
+          <Route
+            path="/inventory"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <FinishedGoods />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
-          <Route 
-            path="/sales" 
+          <Route
+            path="/sales"
             element={isLoggedIn ? (
               <LayoutWrapper>
                 <SalesOrders />
               </LayoutWrapper>
-            ) : <Navigate to="/" />} 
+            ) : <Navigate to="/" />}
           />
         </Routes>
       </Router>
