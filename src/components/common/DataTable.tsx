@@ -43,7 +43,7 @@ export function DataTable<T extends { id: string }>({
   addButtonText = "Add Item"
 }: DataTableProps<T>) {
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState('__all__'); // Default to the 'all' value
   const [page, setPage] = useState(1);
 
   // Filter and search logic
@@ -54,7 +54,7 @@ export function DataTable<T extends { id: string }>({
       ) : true;
     
     const matchesFilter = filterable && filterOptions ? 
-      (filter ? item[filterOptions.key] === filter : true) : true;
+      (filter !== '__all__' ? item[filterOptions.key] === filter : true) : true;
     
     return matchesSearch && matchesFilter;
   });
@@ -84,7 +84,7 @@ export function DataTable<T extends { id: string }>({
             placeholder={`All ${filterOptions.key as string}`}
             className="w-auto"
           >
-            <SelectItem value="">All {filterOptions.key as string}</SelectItem>
+            <SelectItem value="__all__">All {filterOptions.key as string}</SelectItem>
             {filterOptions.options.map((option) => (
               <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}

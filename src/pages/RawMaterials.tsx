@@ -132,12 +132,12 @@ export default function RawMaterials() {
           onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
         />
         <ThemedSelect
-          value={form.category || ''}
-          onValueChange={value => setForm(f => ({ ...f, category: value }))}
+          value={form.category || '__select__'} // Use a non-empty string for initial value
+          onValueChange={value => setForm(f => ({ ...f, category: value === '__select__' ? '' : value }))}
           className="mb-2"
           placeholder="Select Category"
         >
-          <SelectItem value="">Select Category</SelectItem>
+          <SelectItem value="__select__">Select Category</SelectItem> {/* Changed value to non-empty */}
           <SelectItem value="resin">Resin</SelectItem>
           <SelectItem value="colorant">Colorant</SelectItem>
           <SelectItem value="additive">Additive</SelectItem>

@@ -129,12 +129,12 @@ export default function MaintenanceSchedule() {
           required
         />
         <ThemedSelect
-          value={form.maintenance_type || ''}
-          onValueChange={value => setForm(f => ({ ...f, maintenance_type: value }))}
+          value={form.maintenance_type || '__select__'} // Use a non-empty string for initial value
+          onValueChange={value => setForm(f => ({ ...f, maintenance_type: value === '__select__' ? '' : value }))}
           className="mb-2"
           placeholder="Select Maintenance Type"
         >
-          <SelectItem value="">Select Maintenance Type</SelectItem>
+          <SelectItem value="__select__">Select Maintenance Type</SelectItem> {/* Changed value to non-empty */}
           <SelectItem value="daily">Daily</SelectItem>
           <SelectItem value="weekly">Weekly</SelectItem>
           <SelectItem value="monthly">Monthly</SelectItem>

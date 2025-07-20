@@ -123,12 +123,12 @@ export default function QualityControl() {
           required
         />
         <ThemedSelect
-          value={form.inspection_type || ''}
-          onValueChange={value => setForm(f => ({ ...f, inspection_type: value }))}
+          value={form.inspection_type || '__select__'} // Use a non-empty string for initial value
+          onValueChange={value => setForm(f => ({ ...f, inspection_type: value === '__select__' ? '' : value }))}
           className="mb-2"
           placeholder="Select Inspection Type"
         >
-          <SelectItem value="">Select Inspection Type</SelectItem>
+          <SelectItem value="__select__">Select Inspection Type</SelectItem> {/* Changed value to non-empty */}
           <SelectItem value="first_piece">First Piece</SelectItem>
           <SelectItem value="hourly">Hourly</SelectItem>
           <SelectItem value="final">Final</SelectItem>
