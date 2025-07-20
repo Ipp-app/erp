@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Allow read access for daily_production_schedule" ON public.daily_production_schedule;

@@ -56,8 +56,8 @@ export default function DailyProductionSchedule() {
     handleDelete
   } = useCRUD<DailyProductionSchedule>({
     table: 'daily_production_schedule',
-    // Mengubah query untuk sementara hanya mengambil kolom langsung dari tabel ini
-    columns: 'id, schedule_date, production_order_id, machine_id, mold_id, shift, planned_quantity, actual_quantity, status, notes', 
+    // Mengembalikan query untuk menyertakan join ke tabel terkait
+    columns: 'id, schedule_date, production_order_id, machine_id, mold_id, shift, planned_quantity, actual_quantity, status, notes, production_orders(order_number, product_id), machines(name, machine_code), molds(name, mold_code)', 
     rolePermissions: ['admin', 'production_manager', 'production_staff']
   });
 
@@ -88,19 +88,16 @@ export default function DailyProductionSchedule() {
     { 
       key: 'production_order_id' as keyof DailyProductionSchedule, 
       label: 'Production Order',
-      // Render akan menggunakan ID langsung jika join tidak tersedia
       render: (value: string, item: DailyProductionSchedule) => item.production_orders?.order_number || value
     },
     { 
       key: 'machine_id' as keyof DailyProductionSchedule, 
       label: 'Machine',
-      // Render akan menggunakan ID langsung jika join tidak tersedia
       render: (value: string, item: DailyProductionSchedule) => item.machines?.name || value
     },
     { 
       key: 'mold_id' as keyof DailyProductionSchedule, 
       label: 'Mold',
-      // Render akan menggunakan ID langsung jika join tidak tersedia
       render: (value: string, item: DailyProductionSchedule) => item.molds?.name || value
     },
     { key: 'shift' as keyof DailyProductionSchedule, label: 'Shift' },
