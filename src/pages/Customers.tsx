@@ -1,8 +1,11 @@
 import React from 'react';
 import { useCRUD } from '@/hooks/useCRUD';
 import { DataTable } from '@/components/common/DataTable';
-import { FormModal } from '@/components/common/FormModal';
+import { FormModal }
+ from '@/components/common/FormModal';
 import ThemedInput from '@/components/ui/ThemedInput';
+import ThemedSelect from '@/components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '@/components/ui/select'; // Import SelectItem
 
 
 interface Customer {
@@ -184,24 +187,26 @@ export default function Customers() {
           value={form.sales_representative || ''}
           onChange={e => setForm(f => ({ ...f, sales_representative: e.target.value }))}
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.customer_type || 'regular'}
-          onChange={e => setForm(f => ({ ...f, customer_type: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, customer_type: value }))}
+          className="mb-2"
+          placeholder="Select Customer Type"
         >
-          <option value="regular">Regular</option>
-          <option value="premium">Premium</option>
-          <option value="vip">VIP</option>
-        </select>
-        <select
-          className="border p-2 mb-2 w-full"
+          <SelectItem value="regular">Regular</SelectItem>
+          <SelectItem value="premium">Premium</SelectItem>
+          <SelectItem value="vip">VIP</SelectItem>
+        </ThemedSelect>
+        <ThemedSelect
           value={form.status || 'active'}
-          onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="suspended">Suspended</option>
-        </select>
+          <SelectItem value="active">Active</SelectItem>
+          <SelectItem value="inactive">Inactive</SelectItem>
+          <SelectItem value="suspended">Suspended</SelectItem>
+        </ThemedSelect>
       </FormModal>
     </div>
   );

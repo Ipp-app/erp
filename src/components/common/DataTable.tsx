@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import ThemedButton from '../ui/ThemedButton';
 import ThemedInput from '../ui/ThemedInput';
 import ThemedTable from '../ui/ThemedTable';
+import ThemedSelect from '../ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../ui/select'; // Import SelectItem
 
 interface Column<T> {
   key: keyof T;
@@ -76,16 +78,17 @@ export function DataTable<T extends { id: string }>({
           />
         )}
         {filterable && filterOptions && (
-          <select
-            className="border p-2"
+          <ThemedSelect
             value={filter}
-            onChange={e => setFilter(e.target.value)}
+            onValueChange={setFilter}
+            placeholder={`All ${filterOptions.key as string}`}
+            className="w-auto"
           >
-            <option value="">All {filterOptions.key as string}</option>
+            <SelectItem value="">All {filterOptions.key as string}</SelectItem>
             {filterOptions.options.map((option) => (
-              <option key={option} value={option}>{option}</option>
+              <SelectItem key={option} value={option}>{option}</SelectItem>
             ))}
-          </select>
+          </ThemedSelect>
         )}
         {canEdit && onAdd && (
           <ThemedButton style={{ marginLeft: 'auto' }} onClick={onAdd}>

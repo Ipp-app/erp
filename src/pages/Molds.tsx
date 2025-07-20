@@ -3,6 +3,8 @@ import { useCRUD } from '@/hooks/useCRUD';
 import { DataTable } from '@/components/common/DataTable';
 import { FormModal } from '@/components/common/FormModal';
 import ThemedInput from '@/components/ui/ThemedInput';
+import ThemedSelect from '@/components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '@/components/ui/select'; // Import SelectItem
 
 
 interface Mold {
@@ -118,17 +120,17 @@ export default function Molds() {
           onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
           required
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.mold_type || ''}
-          onChange={e => setForm(f => ({ ...f, mold_type: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, mold_type: value }))}
+          className="mb-2"
+          placeholder="Select Type"
         >
-          <option value="">Select Type</option>
-          <option value="single_cavity">Single Cavity</option>
-          <option value="multi_cavity">Multi Cavity</option>
-          <option value="family">Family</option>
-          <option value="stack">Stack</option>
-        </select>
+          <SelectItem value="single_cavity">Single Cavity</SelectItem>
+          <SelectItem value="multi_cavity">Multi Cavity</SelectItem>
+          <SelectItem value="family">Family</SelectItem>
+          <SelectItem value="stack">Stack</SelectItem>
+        </ThemedSelect>
         <ThemedInput
           placeholder="Number of Cavities"
           type="number"
@@ -206,27 +208,29 @@ export default function Molds() {
           value={form.image_url || ''}
           onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.condition_rating || 'excellent'}
-          onChange={e => setForm(f => ({ ...f, condition_rating: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, condition_rating: value }))}
+          className="mb-2"
+          placeholder="Select Condition"
         >
-          <option value="excellent">Excellent</option>
-          <option value="good">Good</option>
-          <option value="fair">Fair</option>
-          <option value="poor">Poor</option>
-        </select>
-        <select
-          className="border p-2 mb-2 w-full"
+          <SelectItem value="excellent">Excellent</SelectItem>
+          <SelectItem value="good">Good</SelectItem>
+          <SelectItem value="fair">Fair</SelectItem>
+          <SelectItem value="poor">Poor</SelectItem>
+        </ThemedSelect>
+        <ThemedSelect
           value={form.status || 'available'}
-          onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="available">Available</option>
-          <option value="in_use">In Use</option>
-          <option value="maintenance">Maintenance</option>
-          <option value="damaged">Damaged</option>
-          <option value="retired">Retired</option>
-        </select>
+          <SelectItem value="available">Available</SelectItem>
+          <SelectItem value="in_use">In Use</SelectItem>
+          <SelectItem value="maintenance">Maintenance</SelectItem>
+          <SelectItem value="damaged">Damaged</SelectItem>
+          <SelectItem value="retired">Retired</SelectItem>
+        </ThemedSelect>
       </FormModal>
     </div>
   );

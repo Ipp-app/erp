@@ -3,6 +3,8 @@ import { useCRUD } from '../hooks/useCRUD';
 import { DataTable } from '../components/common/DataTable';
 import { FormModal } from '../components/common/FormModal';
 import ThemedInput from '../components/ui/ThemedInput';
+import ThemedSelect from '../components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../components/ui/select'; // Import SelectItem
 
 interface FinishedGood {
   id: string;
@@ -175,26 +177,28 @@ export default function FinishedGoods() {
             onChange={e => setForm(f => ({ ...f, total_cost: Number(e.target.value) }))}
           />
         </div>
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.quality_status || 'approved'}
-          onChange={e => setForm(f => ({ ...f, quality_status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, quality_status: value }))}
+          className="mb-2"
+          placeholder="Select Quality Status"
         >
-          <option value="approved">Approved</option>
-          <option value="quarantine">Quarantine</option>
-          <option value="rejected">Rejected</option>
-          <option value="hold">Hold</option>
-        </select>
-        <select
-          className="border p-2 mb-2 w-full"
+          <SelectItem value="approved">Approved</SelectItem>
+          <SelectItem value="quarantine">Quarantine</SelectItem>
+          <SelectItem value="rejected">Rejected</SelectItem>
+          <SelectItem value="hold">Hold</SelectItem>
+        </ThemedSelect>
+        <ThemedSelect
           value={form.status || 'available'}
-          onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="available">Available</option>
-          <option value="reserved">Reserved</option>
-          <option value="shipped">Shipped</option>
-          <option value="damaged">Damaged</option>
-        </select>
+          <SelectItem value="available">Available</SelectItem>
+          <SelectItem value="reserved">Reserved</SelectItem>
+          <SelectItem value="shipped">Shipped</SelectItem>
+          <SelectItem value="damaged">Damaged</SelectItem>
+        </ThemedSelect>
         <textarea
           className="border p-2 mb-2 w-full"
           placeholder="Notes"

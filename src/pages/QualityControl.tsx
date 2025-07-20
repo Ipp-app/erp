@@ -3,6 +3,8 @@ import { useCRUD } from '../hooks/useCRUD';
 import { DataTable } from '../components/common/DataTable';
 import { FormModal } from '../components/common/FormModal';
 import ThemedInput from '../components/ui/ThemedInput';
+import ThemedSelect from '../components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../components/ui/select'; // Import SelectItem
 
 interface QualityInspection {
   id: string;
@@ -120,17 +122,18 @@ export default function QualityControl() {
           onChange={e => setForm(f => ({ ...f, production_order_id: e.target.value }))}
           required
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.inspection_type || ''}
-          onChange={e => setForm(f => ({ ...f, inspection_type: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, inspection_type: value }))}
+          className="mb-2"
+          placeholder="Select Inspection Type"
         >
-          <option value="">Select Inspection Type</option>
-          <option value="first_piece">First Piece</option>
-          <option value="hourly">Hourly</option>
-          <option value="final">Final</option>
-          <option value="customer_complaint">Customer Complaint</option>
-        </select>
+          <SelectItem value="">Select Inspection Type</SelectItem>
+          <SelectItem value="first_piece">First Piece</SelectItem>
+          <SelectItem value="hourly">Hourly</SelectItem>
+          <SelectItem value="final">Final</SelectItem>
+          <SelectItem value="customer_complaint">Customer Complaint</SelectItem>
+        </ThemedSelect>
         <ThemedInput
           placeholder="Inspection Date & Time"
           type="datetime-local"
@@ -162,15 +165,16 @@ export default function QualityControl() {
             onChange={e => setForm(f => ({ ...f, fail_quantity: Number(e.target.value) }))}
           />
         </div>
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.overall_result || 'pass'}
-          onChange={e => setForm(f => ({ ...f, overall_result: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, overall_result: value }))}
+          className="mb-2"
+          placeholder="Select Overall Result"
         >
-          <option value="pass">Pass</option>
-          <option value="fail">Fail</option>
-          <option value="conditional_pass">Conditional Pass</option>
-        </select>
+          <SelectItem value="pass">Pass</SelectItem>
+          <SelectItem value="fail">Fail</SelectItem>
+          <SelectItem value="conditional_pass">Conditional Pass</SelectItem>
+        </ThemedSelect>
         <textarea
           className="border p-2 mb-2 w-full"
           placeholder="Action Taken"

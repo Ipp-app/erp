@@ -3,6 +3,8 @@ import { useCRUD } from '../hooks/useCRUD';
 import { DataTable } from '../components/common/DataTable';
 import { FormModal } from '../components/common/FormModal';
 import ThemedInput from '../components/ui/ThemedInput';
+import ThemedSelect from '../components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../components/ui/select'; // Import SelectItem
 
 interface SalesOrder {
   id: string;
@@ -164,16 +166,17 @@ export default function SalesOrders() {
             value={form.total_amount || ''}
             onChange={e => setForm(f => ({ ...f, total_amount: Number(e.target.value) }))}
           />
-          <select
-            className="border p-2 mb-2 w-full"
+          <ThemedSelect
             value={form.currency || 'IDR'}
-            onChange={e => setForm(f => ({ ...f, currency: e.target.value }))}
+            onValueChange={value => setForm(f => ({ ...f, currency: value }))}
+            className="mb-2"
+            placeholder="Select Currency"
           >
-            <option value="IDR">IDR</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="SGD">SGD</option>
-          </select>
+            <SelectItem value="IDR">IDR</SelectItem>
+            <SelectItem value="USD">USD</SelectItem>
+            <SelectItem value="EUR">EUR</SelectItem>
+            <SelectItem value="SGD">SGD</SelectItem>
+          </ThemedSelect>
         </div>
         <ThemedInput
           placeholder="Payment Terms"
@@ -185,39 +188,42 @@ export default function SalesOrders() {
           value={form.sales_person || ''}
           onChange={e => setForm(f => ({ ...f, sales_person: e.target.value }))}
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.status || 'pending'}
-          onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="in_production">In Production</option>
-          <option value="ready_to_ship">Ready to Ship</option>
-          <option value="shipped">Shipped</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-        <select
-          className="border p-2 mb-2 w-full"
+          <SelectItem value="pending">Pending</SelectItem>
+          <SelectItem value="confirmed">Confirmed</SelectItem>
+          <SelectItem value="in_production">In Production</SelectItem>
+          <SelectItem value="ready_to_ship">Ready to Ship</SelectItem>
+          <SelectItem value="shipped">Shipped</SelectItem>
+          <SelectItem value="completed">Completed</SelectItem>
+          <SelectItem value="cancelled">Cancelled</SelectItem>
+        </ThemedSelect>
+        <ThemedSelect
           value={form.payment_status || 'pending'}
-          onChange={e => setForm(f => ({ ...f, payment_status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, payment_status: value }))}
+          className="mb-2"
+          placeholder="Select Payment Status"
         >
-          <option value="pending">Pending</option>
-          <option value="partial">Partial</option>
-          <option value="paid">Paid</option>
-          <option value="overdue">Overdue</option>
-        </select>
-        <select
-          className="border p-2 mb-2 w-full"
+          <SelectItem value="pending">Pending</SelectItem>
+          <SelectItem value="partial">Partial</SelectItem>
+          <SelectItem value="paid">Paid</SelectItem>
+          <SelectItem value="overdue">Overdue</SelectItem>
+        </ThemedSelect>
+        <ThemedSelect
           value={form.priority_level || 'medium'}
-          onChange={e => setForm(f => ({ ...f, priority_level: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, priority_level: value }))}
+          className="mb-2"
+          placeholder="Select Priority"
         >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-          <option value="urgent">Urgent</option>
-        </select>
+          <SelectItem value="low">Low</SelectItem>
+          <SelectItem value="medium">Medium</SelectItem>
+          <SelectItem value="high">High</SelectItem>
+          <SelectItem value="urgent">Urgent</SelectItem>
+        </ThemedSelect>
         <textarea
           className="border p-2 mb-2 w-full"
           placeholder="Notes"

@@ -3,6 +3,8 @@ import { useCRUD } from '@/hooks/useCRUD';
 import { DataTable } from '@/components/common/DataTable';
 import { FormModal } from '@/components/common/FormModal';
 import ThemedInput from '@/components/ui/ThemedInput';
+import ThemedSelect from '@/components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '@/components/ui/select'; // Import SelectItem
 
 interface Product {
   id: string;
@@ -110,14 +112,15 @@ export default function Products() {
           value={form.image_url || ''}
           onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.status || 'active'}
-          onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
+          <SelectItem value="active">Active</SelectItem>
+          <SelectItem value="inactive">Inactive</SelectItem>
+        </ThemedSelect>
       </FormModal>
     </div>
   );

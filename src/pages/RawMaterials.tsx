@@ -3,6 +3,8 @@ import { useCRUD } from '@/hooks/useCRUD';
 import { DataTable } from '@/components/common/DataTable';
 import { FormModal } from '@/components/common/FormModal';
 import ThemedInput from '@/components/ui/ThemedInput';
+import ThemedSelect from '@/components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '@/components/ui/select'; // Import SelectItem
 
 interface RawMaterial {
   id: string;
@@ -129,17 +131,18 @@ export default function RawMaterials() {
           value={form.description || ''}
           onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
         />
-        <select
-          className="w-full p-2 mb-2 bg-transparent border rounded-md focus:outline-none focus:ring-2"
+        <ThemedSelect
           value={form.category || ''}
-          onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, category: value }))}
+          className="mb-2"
+          placeholder="Select Category"
         >
-          <option value="">Select Category</option>
-          <option value="resin">Resin</option>
-          <option value="colorant">Colorant</option>
-          <option value="additive">Additive</option>
-          <option value="packaging">Packaging</option>
-        </select>
+          <SelectItem value="">Select Category</SelectItem>
+          <SelectItem value="resin">Resin</SelectItem>
+          <SelectItem value="colorant">Colorant</SelectItem>
+          <SelectItem value="additive">Additive</SelectItem>
+          <SelectItem value="packaging">Packaging</SelectItem>
+        </ThemedSelect>
         <ThemedInput
           placeholder="Material Type"
           value={form.material_type || ''}
@@ -219,14 +222,15 @@ export default function RawMaterials() {
           value={form.image_url || ''}
           onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
         />
-        <select
-          className="w-full p-2 mb-2 bg-transparent border rounded-md focus:outline-none focus:ring-2"
+        <ThemedSelect
           value={form.is_active ? 'true' : 'false'}
-          onChange={e => setForm(f => ({ ...f, is_active: e.target.value === 'true' }))}
+          onValueChange={value => setForm(f => ({ ...f, is_active: value === 'true' }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
-        </select>
+          <SelectItem value="true">Active</SelectItem>
+          <SelectItem value="false">Inactive</SelectItem>
+        </ThemedSelect>
       </FormModal>
     </div>
   );

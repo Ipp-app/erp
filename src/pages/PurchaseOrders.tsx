@@ -3,6 +3,8 @@ import { useCRUD } from '../hooks/useCRUD';
 import { DataTable } from '../components/common/DataTable';
 import { FormModal } from '../components/common/FormModal';
 import ThemedInput from '../components/ui/ThemedInput';
+import ThemedSelect from '../components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../components/ui/select'; // Import SelectItem
 
 interface PurchaseOrder {
   id: string;
@@ -142,16 +144,17 @@ export default function PurchaseOrders() {
             value={form.total_amount || ''}
             onChange={e => setForm(f => ({ ...f, total_amount: Number(e.target.value) }))}
           />
-          <select
-            className="border p-2 mb-2 w-full"
+          <ThemedSelect
             value={form.currency || 'IDR'}
-            onChange={e => setForm(f => ({ ...f, currency: e.target.value }))}
+            onValueChange={value => setForm(f => ({ ...f, currency: value }))}
+            className="mb-2"
+            placeholder="Select Currency"
           >
-            <option value="IDR">IDR</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="SGD">SGD</option>
-          </select>
+            <SelectItem value="IDR">IDR</SelectItem>
+            <SelectItem value="USD">USD</SelectItem>
+            <SelectItem value="EUR">EUR</SelectItem>
+            <SelectItem value="SGD">SGD</SelectItem>
+          </ThemedSelect>
         </div>
         <ThemedInput
           placeholder="Payment Terms"
@@ -175,18 +178,19 @@ export default function PurchaseOrders() {
             onChange={e => setForm(f => ({ ...f, approved_by: e.target.value }))}
           />
         </div>
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.status || 'pending'}
-          onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="pending">Pending</option>
-          <option value="sent">Sent</option>
-          <option value="acknowledged">Acknowledged</option>
-          <option value="delivered">Delivered</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
+          <SelectItem value="pending">Pending</SelectItem>
+          <SelectItem value="sent">Sent</SelectItem>
+          <SelectItem value="acknowledged">Acknowledged</SelectItem>
+          <SelectItem value="delivered">Delivered</SelectItem>
+          <SelectItem value="completed">Completed</SelectItem>
+          <SelectItem value="cancelled">Cancelled</SelectItem>
+        </ThemedSelect>
         <textarea
           className="border p-2 mb-2 w-full"
           placeholder="Notes"

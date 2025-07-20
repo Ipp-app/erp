@@ -3,6 +3,8 @@ import { useCRUD } from '../hooks/useCRUD';
 import { DataTable } from '../components/common/DataTable';
 import { FormModal } from '../components/common/FormModal';
 import ThemedInput from '../components/ui/ThemedInput';
+import ThemedSelect from '../components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../components/ui/select'; // Import SelectItem
 
 interface MaintenanceSchedule {
   id: string;
@@ -126,18 +128,19 @@ export default function MaintenanceSchedule() {
           onChange={e => setForm(f => ({ ...f, machine_id: e.target.value }))}
           required
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.maintenance_type || ''}
-          onChange={e => setForm(f => ({ ...f, maintenance_type: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, maintenance_type: value }))}
+          className="mb-2"
+          placeholder="Select Maintenance Type"
         >
-          <option value="">Select Maintenance Type</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-          <option value="quarterly">Quarterly</option>
-          <option value="yearly">Yearly</option>
-        </select>
+          <SelectItem value="">Select Maintenance Type</SelectItem>
+          <SelectItem value="daily">Daily</SelectItem>
+          <SelectItem value="weekly">Weekly</SelectItem>
+          <SelectItem value="monthly">Monthly</SelectItem>
+          <SelectItem value="quarterly">Quarterly</SelectItem>
+          <SelectItem value="yearly">Yearly</SelectItem>
+        </ThemedSelect>
         <ThemedInput
           placeholder="Maintenance Item"
           value={form.maintenance_item || ''}
@@ -186,24 +189,26 @@ export default function MaintenanceSchedule() {
           value={form.responsible_person || ''}
           onChange={e => setForm(f => ({ ...f, responsible_person: e.target.value }))}
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.priority_level || 'medium'}
-          onChange={e => setForm(f => ({ ...f, priority_level: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, priority_level: value }))}
+          className="mb-2"
+          placeholder="Select Priority"
         >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-          <option value="critical">Critical</option>
-        </select>
-        <select
-          className="border p-2 mb-2 w-full"
+          <SelectItem value="low">Low</SelectItem>
+          <SelectItem value="medium">Medium</SelectItem>
+          <SelectItem value="high">High</SelectItem>
+          <SelectItem value="critical">Critical</SelectItem>
+        </ThemedSelect>
+        <ThemedSelect
           value={form.is_active ? 'true' : 'false'}
-          onChange={e => setForm(f => ({ ...f, is_active: e.target.value === 'true' }))}
+          onValueChange={value => setForm(f => ({ ...f, is_active: value === 'true' }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
-        </select>
+          <SelectItem value="true">Active</SelectItem>
+          <SelectItem value="false">Inactive</SelectItem>
+        </ThemedSelect>
       </FormModal>
     </div>
   );

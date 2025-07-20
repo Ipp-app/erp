@@ -3,6 +3,8 @@ import { useCRUD } from '../hooks/useCRUD';
 import { DataTable } from '../components/common/DataTable';
 import { FormModal } from '../components/common/FormModal';
 import ThemedInput from '../components/ui/ThemedInput';
+import ThemedSelect from '../components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../components/ui/select'; // Import SelectItem
 
 interface ProductionOrder {
   id: string;
@@ -222,28 +224,30 @@ export default function ProductionOrders() {
             onChange={e => setForm(f => ({ ...f, breakdown_time_minutes: Number(e.target.value) }))}
           />
         </div>
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.priority_level || 'medium'}
-          onChange={e => setForm(f => ({ ...f, priority_level: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, priority_level: value }))}
+          className="mb-2"
+          placeholder="Select Priority"
         >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-          <option value="urgent">Urgent</option>
-        </select>
-        <select
-          className="border p-2 mb-2 w-full"
+          <SelectItem value="low">Low</SelectItem>
+          <SelectItem value="medium">Medium</SelectItem>
+          <SelectItem value="high">High</SelectItem>
+          <SelectItem value="urgent">Urgent</SelectItem>
+        </ThemedSelect>
+        <ThemedSelect
           value={form.status || 'planned'}
-          onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="planned">Planned</option>
-          <option value="released">Released</option>
-          <option value="in_progress">In Progress</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-          <option value="on_hold">On Hold</option>
-        </select>
+          <SelectItem value="planned">Planned</SelectItem>
+          <SelectItem value="released">Released</SelectItem>
+          <SelectItem value="in_progress">In Progress</SelectItem>
+          <SelectItem value="completed">Completed</SelectItem>
+          <SelectItem value="cancelled">Cancelled</SelectItem>
+          <SelectItem value="on_hold">On Hold</SelectItem>
+        </ThemedSelect>
         <textarea
           className="border p-2 mb-2 w-full"
           placeholder="Notes"

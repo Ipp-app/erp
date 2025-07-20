@@ -3,6 +3,8 @@ import { useCRUD } from '../hooks/useCRUD';
 import { DataTable } from '../components/common/DataTable';
 import { FormModal } from '../components/common/FormModal';
 import ThemedInput from '../components/ui/ThemedInput';
+import ThemedSelect from '../components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../components/ui/select'; // Import SelectItem
 
 interface User {
   id: string;
@@ -134,14 +136,14 @@ export default function Users() {
           value={form.profile_picture_url || ''}
           onChange={e => setForm(f => ({ ...f, profile_picture_url: e.target.value }))}
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.is_active ? 'true' : 'false'}
-          onChange={e => setForm(f => ({ ...f, is_active: e.target.value === 'true' }))}
+          onValueChange={value => setForm(f => ({ ...f, is_active: value === 'true' }))}
+          className="mb-2"
         >
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
-        </select>
+          <SelectItem value="true">Active</SelectItem>
+          <SelectItem value="false">Inactive</SelectItem>
+        </ThemedSelect>
       </FormModal>
     </div>
   );

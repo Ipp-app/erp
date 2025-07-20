@@ -3,6 +3,8 @@ import { useTheme } from '../components/ui/GlobalUI';
 import { ThemeSelector } from '../components/common/ThemeSelector';
 import ThemedButton from '../components/ui/ThemedButton';
 import ThemedInput from '../components/ui/ThemedInput';
+import ThemedSelect from '../components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '../components/ui/select'; // Import SelectItem
 
 interface SystemConfig {
   company_name: string;
@@ -118,21 +120,16 @@ export default function Settings() {
             value={systemConfig.company_name}
             onChange={e => setSystemConfig(prev => ({ ...prev, company_name: e.target.value }))}
           />
-          <select
-            className="border p-3 rounded-lg"
+          <ThemedSelect
             value={systemConfig.default_currency}
-            onChange={e => setSystemConfig(prev => ({ ...prev, default_currency: e.target.value }))}
-            style={{
-              backgroundColor: currentThemeData.surface,
-              borderColor: currentThemeData.border,
-              color: currentThemeData.text
-            }}
+            onValueChange={value => setSystemConfig(prev => ({ ...prev, default_currency: value }))}
+            placeholder="Select Currency"
           >
-            <option value="IDR">Indonesian Rupiah (IDR)</option>
-            <option value="USD">US Dollar (USD)</option>
-            <option value="EUR">Euro (EUR)</option>
-            <option value="SGD">Singapore Dollar (SGD)</option>
-          </select>
+            <SelectItem value="IDR">Indonesian Rupiah (IDR)</SelectItem>
+            <SelectItem value="USD">US Dollar (USD)</SelectItem>
+            <SelectItem value="EUR">Euro (EUR)</SelectItem>
+            <SelectItem value="SGD">Singapore Dollar (SGD)</SelectItem>
+          </ThemedSelect>
         </div>
       </div>
 

@@ -3,6 +3,8 @@ import { useCRUD } from '@/hooks/useCRUD';
 import { DataTable } from '@/components/common/DataTable';
 import { FormModal } from '@/components/common/FormModal';
 import ThemedInput from '@/components/ui/ThemedInput';
+import ThemedSelect from '@/components/ui/ThemedSelect'; // Import ThemedSelect
+import { SelectItem } from '@/components/ui/select'; // Import SelectItem
 
 
 interface Machine {
@@ -107,16 +109,16 @@ export default function Machines() {
           onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
           required
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.machine_type || ''}
-          onChange={e => setForm(f => ({ ...f, machine_type: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, machine_type: value }))}
+          className="mb-2"
+          placeholder="Select Type"
         >
-          <option value="">Select Type</option>
-          <option value="injection">Injection</option>
-          <option value="blow">Blow</option>
-          <option value="auxiliary">Auxiliary</option>
-        </select>
+          <SelectItem value="injection">Injection</SelectItem>
+          <SelectItem value="blow">Blow</SelectItem>
+          <SelectItem value="auxiliary">Auxiliary</SelectItem>
+        </ThemedSelect>
         <ThemedInput
           placeholder="Brand"
           value={form.brand || ''}
@@ -169,16 +171,17 @@ export default function Machines() {
           value={form.hourly_rate || ''}
           onChange={e => setForm(f => ({ ...f, hourly_rate: Number(e.target.value) }))}
         />
-        <select
-          className="border p-2 mb-2 w-full"
+        <ThemedSelect
           value={form.status || 'active'}
-          onChange={e => setForm(f => ({ ...f, status: e.target.value }))}
+          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          className="mb-2"
+          placeholder="Select Status"
         >
-          <option value="active">Active</option>
-          <option value="maintenance">Maintenance</option>
-          <option value="breakdown">Breakdown</option>
-          <option value="inactive">Inactive</option>
-        </select>
+          <SelectItem value="active">Active</SelectItem>
+          <SelectItem value="maintenance">Maintenance</SelectItem>
+          <SelectItem value="breakdown">Breakdown</SelectItem>
+          <SelectItem value="inactive">Inactive</SelectItem>
+        </ThemedSelect>
       </FormModal>
     </div>
   );
