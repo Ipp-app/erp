@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   X, Home, Users, BarChart3, Settings, LogOut, ChevronDown, Moon, Sun, Palette, Bell, Search, Plus, TrendingUp, Activity, Shield, Zap, Eye, EyeOff, Boxes, ShoppingCart, UserCheck, BarChart2, Cpu, Layers, Package, Warehouse, ShieldCheck, UsersRound
 } from 'lucide-react';
@@ -62,6 +62,26 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
   const location = useLocation();
   const { isLightMode, setIsLightMode, currentTheme, setCurrentTheme, currentThemeData } = useTheme();
   const currentTitle = menuTitles[location.pathname] || 'ERP';
+
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    if (showProfileDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showProfileDropdown]);
 
   const userDisplayName = user?.user_metadata?.full_name || user?.email || 'Guest';
   const userEmail = user?.email || '';
@@ -276,7 +296,7 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles
             </ThemedButton>
             
             {/* Profile Dropdown */}
-            <div className="relative">
+            <div className="relative" ref={profileDropdownRef}>
               <ThemedButton
                 onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                 style={{ 
