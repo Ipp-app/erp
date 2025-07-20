@@ -9,10 +9,10 @@ import { useAuth } from './hooks/useAuth';
 import Users from './pages/Users';
 import Machines from './pages/Machines';
 import Molds from './pages/Molds';
-import Products from './pages/Products';
-import RawMaterials from './pages/RawMaterials';
+import Products from './pages/Products'; // Now points to the refactored version
+import RawMaterials from './pages/RawMaterials'; // Now points to the refactored version
 import ProductionOrders from './pages/ProductionOrders';
-import FinishedGoods from './pages/FinishedGoodsRefactored';
+import FinishedGoods from './pages/FinishedGoods'; // Now points to the refactored version
 import Customers from './pages/Customers';
 import SalesOrders from './pages/SalesOrders';
 import QualityControl from './pages/QualityControl';

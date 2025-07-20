@@ -84,6 +84,7 @@ export default function Molds() {
 
   return (
     <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Molds Management</h1>
       <DataTable
         data={molds}
         columns={columns}
