@@ -13,13 +13,14 @@ interface DailyProductionSchedule {
   production_order_id: string;
   machine_id: string;
   mold_id: string; // Keep this for form handling, even if fetched via join
-  shift: string;
+  shift_id: string; // Changed from 'shift' to 'shift_id'
   planned_quantity: number;
   actual_quantity: number;
   status: string;
   notes: string;
   production_orders?: { order_number: string; product_id: string; molds?: { name: string; mold_code: string } | null } | null; // Nested join for molds
   machines?: { name: string; machine_code: string } | null;
+  production_shifts?: { shift_name: string } | null; // Added for shift name
   molds?: { name: string; mold_code: string } | null; // Keep for type consistency if needed for form
 }
 
@@ -42,6 +43,12 @@ interface Mold {
   mold_code: string;
 }
 
+interface ProductionShift {
+  id: string;
+  shift_name: string;
+  shift_code: string;
+}
+
 export default function DailyProductionSchedule() {
   const {
     data: schedules,
@@ -57,28 +64,31 @@ export default function DailyProductionSchedule() {
     handleDelete
   } = useCRUD<DailyProductionSchedule>({
     table: 'daily_production_schedule',
-    // Mengubah query untuk mengambil mold melalui production_orders
-    columns: 'id, schedule_date, production_order_id, machine_id, shift, planned_quantity, actual_quantity, status, notes, production_orders(order_number, product_id, molds(name, mold_code)), machines(name, machine_code)', 
+    // Mengubah query untuk mengambil mold melalui production_orders dan shift_name melalui production_shifts
+    columns: 'id, schedule_date, production_order_id, machine_id, shift_id, planned_quantity, actual_quantity, status, notes, production_orders(order_number, product_id, molds(name, mold_code)), machines(name, machine_code), production_shifts(shift_name)', 
     rolePermissions: ['admin', 'production_manager', 'production_staff']
   });
 
   const [productionOrders, setProductionOrders] = useState<ProductionOrder[]>([]);
   const [machines, setMachines] = useState<Machine[]>([]);
   const [molds, setMolds] = useState<Mold[]>([]);
+  const [productionShifts, setProductionShifts] = useState<ProductionShift[]>([]); // New state for shifts
   const [loadingRelations, setLoadingRelations] = useState(true);
 
   useEffect(() => {
     async function fetchRelations() {
       setLoadingRelations(true);
-      const [{ data: ordersData }, { data: machinesData }, { data: moldsData }] = await Promise.all([
+      const [{ data: ordersData }, { data: machinesData }, { data: moldsData }, { data: shiftsData }] = await Promise.all([
         supabase.from('production_orders').select('id, order_number, product_id, mold_id'), // Fetch mold_id from production_orders
         supabase.from('machines').select('id, name, machine_code'),
-        supabase.from('molds').select('id, name, mold_code')
+        supabase.from('molds').select('id, name, mold_code'),
+        supabase.from('production_shifts').select('id, shift_name, shift_code') // Fetch shifts
       ]);
 
       setProductionOrders(ordersData || []);
       setMachines(machinesData || []);
       setMolds(moldsData || []);
+      setProductionShifts(shiftsData || []); // Set shifts data
       setLoadingRelations(false);
     }
     fetchRelations();
@@ -101,7 +111,11 @@ export default function DailyProductionSchedule() {
       label: 'Mold',
       render: (value: string, item: DailyProductionSchedule) => item.production_orders?.molds?.name || item.mold_id || value // Access nested mold name
     },
-    { key: 'shift' as keyof DailyProductionSchedule, label: 'Shift' },
+    { 
+      key: 'shift_id' as keyof DailyProductionSchedule, // Changed key to shift_id
+      label: 'Shift',
+      render: (value: string, item: DailyProductionSchedule) => item.production_shifts?.shift_name || value // Render shift_name
+    },
     { 
       key: 'planned_quantity' as keyof DailyProductionSchedule, 
       label: 'Planned Qty',
@@ -136,7 +150,7 @@ export default function DailyProductionSchedule() {
     }
   ];
 
-  const shifts = Array.from(new Set(schedules.map(s => s.shift).filter(Boolean)));
+  const shifts = Array.from(new Set(schedules.map(s => s.production_shifts?.shift_name || '').filter(Boolean))); // Use production_shifts.shift_name for filter options
   const statuses = Array.from(new Set(schedules.map(s => s.status).filter(Boolean)));
 
   if (loading || loadingRelations) return <div>Loading Daily Production Schedule...</div>;
@@ -211,14 +225,16 @@ export default function DailyProductionSchedule() {
           ))}
         </ThemedSelect>
         <ThemedSelect
-          value={form.shift || ''}
-          onValueChange={value => setForm(f => ({ ...f, shift: value }))}
+          value={form.shift_id || ''} // Changed to shift_id
+          onValueChange={value => setForm(f => ({ ...f, shift_id: value }))} // Changed to shift_id
           className="mb-2"
           placeholder="Select Shift"
         >
-          <SelectItem value="shift_a">Shift A</SelectItem>
-          <SelectItem value="shift_b">Shift B</SelectItem>
-          <SelectItem value="shift_c">Shift C</SelectItem>
+          {productionShifts.map(shift => ( // Use productionShifts data
+            <SelectItem key={shift.id} value={shift.id}>
+              {shift.shift_name} ({shift.shift_code})
+            </SelectItem>
+          ))}
         </ThemedSelect>
         <ThemedInput
           placeholder="Planned Quantity"
