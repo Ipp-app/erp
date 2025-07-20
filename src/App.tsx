@@ -22,11 +22,11 @@ import MaintenanceSchedule from './pages/MaintenanceSchedule';
 import PurchaseOrders from './pages/PurchaseOrders';
 
 function App() {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user, userRoles } = useAuth();
 
   // Wrapper component for pages that need layout
   const LayoutWrapper = ({ children }: { children: React.ReactNode }) => (
-    <Layout handleLogout={logout}>
+    <Layout handleLogout={logout} user={user} userRoles={userRoles}>
       {children}
     </Layout>
   );

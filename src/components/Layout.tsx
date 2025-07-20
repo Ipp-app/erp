@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import {
   X, Home, Users, BarChart3, Settings, LogOut, ChevronDown, Moon, Sun, Palette, Bell, Search, Plus, TrendingUp, Activity, Shield, Zap, Eye, EyeOff, Boxes, ShoppingCart, UserCheck, BarChart2, Cpu, Layers, Package, Warehouse, ShieldCheck, UsersRound
 } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme, themesConfig } from './ui/GlobalUI';
 import ThemedButton from './ui/ThemedButton';
+import { User } from '@supabase/supabase-js';
 
 const menuItems = [
   { icon: Home, label: 'Dashboard', to: '/dashboard' },
@@ -50,15 +51,22 @@ const menuTitles: Record<string, string> = {
 interface LayoutProps {
   children: React.ReactNode;
   handleLogout: () => void;
+  user: User | null;
+  userRoles: string[];
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, handleLogout }) => {
+const Layout: React.FC<LayoutProps> = ({ children, handleLogout, user, userRoles }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showThemeDropdown, setShowThemeDropdown] = useState(false);
   const location = useLocation();
   const { isLightMode, setIsLightMode, currentTheme, setCurrentTheme, currentThemeData } = useTheme();
   const currentTitle = menuTitles[location.pathname] || 'ERP';
+
+  const userDisplayName = user?.user_metadata?.full_name || user?.email || 'Guest';
+  const userEmail = user?.email || '';
+  const userInitials = userDisplayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  const userRoleDisplay = userRoles.length > 0 ? userRoles.join(', ') : 'No Role';
 
   return (
     <div
@@ -289,12 +297,12 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout }) => {
                     color: isLightMode ? '#ffffff' : currentThemeData.bg
                   }}
                 >
-                  JD
+                  {userInitials}
                 </div>
                 <div className="text-left">
-                  <div className="text-sm font-medium">John Doe</div>
+                  <div className="text-sm font-medium">{userDisplayName}</div>
                   <div className="text-xs" style={{ color: currentThemeData.textSecondary }}>
-                    Admin
+                    {userRoleDisplay}
                   </div>
                 </div>
                 <ChevronDown size={16} />
@@ -308,8 +316,8 @@ const Layout: React.FC<LayoutProps> = ({ children, handleLogout }) => {
                   }}
                 >
                   <div className="p-3 border-b" style={{ borderColor: currentThemeData.border }}>
-                    <div className="font-medium" style={{ color: currentThemeData.text }}>John Doe</div>
-                    <div className="text-sm" style={{ color: currentThemeData.textSecondary }}>john@example.com</div>
+                    <div className="font-medium" style={{ color: currentThemeData.text }}>{userDisplayName}</div>
+                    <div className="text-sm" style={{ color: currentThemeData.textSecondary }}>{userEmail}</div>
                   </div>
                   <div className="py-2">
                     <ThemedButton 
