@@ -55,8 +55,8 @@ export default function MaterialBatches() {
     handleDelete
   } = useCRUD<MaterialBatchForm>({
     table: 'material_batches',
-    // Corrected columns: removed 'total_cost', changed 'status' to 'quality_status'
-    columns: 'id, batch_number, material_id, quantity_received, unit_of_measure, received_date, expiry_date, supplier_id, unit_cost, storage_location, quality_status, notes, raw_materials(name, material_code, unit_of_measure), suppliers(company_name)',
+    // Sederhanakan query untuk debugging
+    columns: 'id, batch_number, quality_status', // Hanya ambil kolom dasar
     rolePermissions: ['admin', 'warehouse_staff']
   });
 
@@ -93,34 +93,6 @@ export default function MaterialBatches() {
   const columns = [
     { key: 'batch_number' as keyof MaterialBatch, label: 'Batch Number' },
     { 
-      key: 'material_id' as keyof MaterialBatch, 
-      label: 'Material',
-      render: (value: string, item: MaterialBatch) => item.raw_materials?.name || value
-    },
-    { 
-      key: 'quantity_received' as keyof MaterialBatch,
-      label: 'Quantity',
-      render: (value: number, item: MaterialBatch) => `${value?.toLocaleString() || '0'} ${item.unit_of_measure || ''}`
-    },
-    { key: 'received_date' as keyof MaterialBatch, label: 'Received Date' },
-    { key: 'expiry_date' as keyof MaterialBatch, label: 'Expiry Date' },
-    { 
-      key: 'supplier_id' as keyof MaterialBatch, 
-      label: 'Supplier',
-      render: (value: string, item: MaterialBatch) => item.suppliers?.company_name || value
-    },
-    { 
-      key: 'unit_cost' as keyof MaterialBatch, 
-      label: 'Unit Cost',
-      render: (value: number) => `$${value?.toFixed(2) || '0.00'}`
-    },
-    { 
-      key: 'total_cost' as keyof MaterialBatchForm,
-      label: 'Total Cost',
-      render: (value: number, item: MaterialBatchForm) => `$${((item.quantity_received || 0) * (item.unit_cost || 0))?.toFixed(2) || '0.00'}`
-    },
-    { key: 'storage_location' as keyof MaterialBatch, label: 'Location' },
-    { 
       key: 'quality_status' as keyof MaterialBatch,
       label: 'Status',
       render: (value: string) => {
@@ -136,7 +108,8 @@ export default function MaterialBatches() {
   ];
 
   const statuses = Array.from(new Set(batches.map(b => b.quality_status).filter(Boolean)));
-  const materialNames = Array.from(new Set(batches.map(b => b.raw_materials?.name || '').filter(Boolean)));
+  // materialNames tidak lagi digunakan karena join dihilangkan sementara
+  // const materialNames = Array.from(new Set(batches.map(b => b.raw_materials?.name || '').filter(Boolean)));
 
   if (loading || loadingRelations) return <div>Loading Material Batches...</div>;
 
