@@ -11,18 +11,23 @@ interface MaterialBatch {
   id: string;
   batch_number: string;
   material_id: string;
-  quantity: number;
+  quantity_received: number; // Changed from 'quantity'
   unit_of_measure: string;
   received_date: string;
   expiry_date: string;
   supplier_id: string;
   unit_cost: number;
-  total_cost: number;
+  // total_cost is a derived field, not stored in DB
   storage_location: string;
-  status: string;
+  quality_status: string; // Changed from 'status'
   notes: string;
-  raw_materials?: { name: string; material_code: string; unit_of_measure: string } | null; // For joining raw material name
-  suppliers?: { company_name: string } | null; // For joining supplier name
+  raw_materials?: { name: string; material_code: string; unit_of_measure: string } | null;
+  suppliers?: { company_name: string } | null;
+}
+
+// Extend MaterialBatch for form state to include total_cost as a temporary field
+interface MaterialBatchForm extends MaterialBatch {
+  total_cost?: number;
 }
 
 interface RawMaterial {
@@ -50,9 +55,9 @@ export default function MaterialBatches() {
     closeForm,
     handleSubmit,
     handleDelete
-  } = useCRUD<MaterialBatch>({
+  } = useCRUD<MaterialBatchForm>({ // Use MaterialBatchForm for CRUD operations
     table: 'material_batches',
-    columns: 'id, batch_number, material_id, quantity, unit_of_measure, received_date, expiry_date, supplier_id, unit_cost, total_cost, storage_location, status, notes, raw_materials(name, material_code, unit_of_measure), suppliers(company_name)', // Fetch related data
+    columns: 'id, batch_number, material_id, quantity_received, unit_of_measure, received_date, expiry_date, supplier_id, unit_cost, storage_location, quality_status, notes, raw_materials(name, material_code, unit_of_measure), suppliers(company_name)', // Removed total_cost, changed quantity to quantity_received, status to quality_status
     rolePermissions: ['admin', 'warehouse_staff']
   });
 
@@ -79,12 +84,12 @@ export default function MaterialBatches() {
     fetchRelations();
   }, []);
 
-  // Calculate total_cost whenever quantity or unit_cost changes
+  // Calculate total_cost whenever quantity_received or unit_cost changes
   useEffect(() => {
-    if (form.quantity !== undefined && form.unit_cost !== undefined) {
-      setForm(f => ({ ...f, total_cost: (f.quantity || 0) * (f.unit_cost || 0) }));
+    if (form.quantity_received !== undefined && form.unit_cost !== undefined) {
+      setForm(f => ({ ...f, total_cost: (f.quantity_received || 0) * (f.unit_cost || 0) }));
     }
-  }, [form.quantity, form.unit_cost, setForm]);
+  }, [form.quantity_received, form.unit_cost, setForm]);
 
   const columns = [
     { key: 'batch_number' as keyof MaterialBatch, label: 'Batch Number' },
@@ -94,7 +99,7 @@ export default function MaterialBatches() {
       render: (value: string, item: MaterialBatch) => item.raw_materials?.name || value
     },
     { 
-      key: 'quantity' as keyof MaterialBatch, 
+      key: 'quantity_received' as keyof MaterialBatch, // Changed from 'quantity'
       label: 'Quantity',
       render: (value: number, item: MaterialBatch) => `${value?.toLocaleString() || '0'} ${item.unit_of_measure || ''}`
     },
@@ -111,13 +116,13 @@ export default function MaterialBatches() {
       render: (value: number) => `$${value?.toFixed(2) || '0.00'}`
     },
     { 
-      key: 'total_cost' as keyof MaterialBatch, 
+      key: 'total_cost' as keyof MaterialBatchForm, // Use MaterialBatchForm for rendering total_cost
       label: 'Total Cost',
-      render: (value: number) => `$${value?.toFixed(2) || '0.00'}`
+      render: (value: number, item: MaterialBatchForm) => `$${((item.quantity_received || 0) * (item.unit_cost || 0))?.toFixed(2) || '0.00'}` // Calculate on the fly for display
     },
     { key: 'storage_location' as keyof MaterialBatch, label: 'Location' },
     { 
-      key: 'status' as keyof MaterialBatch, 
+      key: 'quality_status' as keyof MaterialBatch, // Changed from 'status'
       label: 'Status',
       render: (value: string) => {
         const colors = {
@@ -131,7 +136,7 @@ export default function MaterialBatches() {
     }
   ];
 
-  const statuses = Array.from(new Set(batches.map(b => b.status).filter(Boolean)));
+  const statuses = Array.from(new Set(batches.map(b => b.quality_status).filter(Boolean))); // Changed from 'status'
   const materialNames = Array.from(new Set(batches.map(b => b.raw_materials?.name || '').filter(Boolean)));
 
   if (loading || loadingRelations) return <div>Loading Material Batches...</div>;
@@ -140,10 +145,10 @@ export default function MaterialBatches() {
     <div className="p-4">
       <DataTable
         data={batches}
-        columns={columns}
+        columns={columns as any} // Cast to any to temporarily bypass complex type inference issues
         searchable
         filterable
-        filterOptions={{ key: 'status', options: statuses }}
+        filterOptions={{ key: 'quality_status', options: statuses }} // Changed from 'status'
         paginated
         pageSize={10}
         canEdit={canEdit()}
@@ -185,11 +190,11 @@ export default function MaterialBatches() {
           ))}
         </ThemedSelect>
         <ThemedInput
-          placeholder="Quantity"
+          placeholder="Quantity Received" // Changed from 'Quantity'
           type="number"
           step="0.01"
-          value={form.quantity || ''}
-          onChange={e => setForm(f => ({ ...f, quantity: Number(e.target.value) }))}
+          value={form.quantity_received || ''} // Changed from 'quantity'
+          onChange={e => setForm(f => ({ ...f, quantity_received: Number(e.target.value) }))} // Changed from 'quantity'
           required
         />
         <ThemedInput
@@ -237,7 +242,6 @@ export default function MaterialBatches() {
           type="number"
           step="0.01"
           value={form.total_cost || ''}
-          onChange={e => setForm(f => ({ ...f, total_cost: Number(e.target.value) }))}
           disabled // Total cost is calculated automatically
         />
         <ThemedInput
@@ -246,8 +250,8 @@ export default function MaterialBatches() {
           onChange={e => setForm(f => ({ ...f, storage_location: e.target.value }))}
         />
         <ThemedSelect
-          value={form.status || 'in_stock'}
-          onValueChange={value => setForm(f => ({ ...f, status: value }))}
+          value={form.quality_status || 'in_stock'} // Changed from 'status'
+          onValueChange={value => setForm(f => ({ ...f, quality_status: value }))} // Changed from 'status'
           className="mb-2"
           placeholder="Select Status"
         >
