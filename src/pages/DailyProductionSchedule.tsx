@@ -12,21 +12,22 @@ interface DailyProductionSchedule {
   schedule_date: string;
   production_order_id: string;
   machine_id: string;
-  mold_id: string;
+  mold_id: string; // Keep this for form handling, even if fetched via join
   shift: string;
   planned_quantity: number;
   actual_quantity: number;
   status: string;
   notes: string;
-  production_orders?: { order_number: string; product_id: string } | null;
+  production_orders?: { order_number: string; product_id: string; molds?: { name: string; mold_code: string } | null } | null; // Nested join for molds
   machines?: { name: string; machine_code: string } | null;
-  molds?: { name: string; mold_code: string } | null;
+  molds?: { name: string; mold_code: string } | null; // Keep for type consistency if needed for form
 }
 
 interface ProductionOrder {
   id: string;
   order_number: string;
   product_id: string;
+  mold_id?: string; // Add mold_id to ProductionOrder interface
 }
 
 interface Machine {
@@ -56,8 +57,8 @@ export default function DailyProductionSchedule() {
     handleDelete
   } = useCRUD<DailyProductionSchedule>({
     table: 'daily_production_schedule',
-    // Mengembalikan query untuk menyertakan join ke tabel terkait
-    columns: 'id, schedule_date, production_order_id, machine_id, mold_id, shift, planned_quantity, actual_quantity, status, notes, production_orders(order_number, product_id), machines(name, machine_code), molds(name, mold_code)', 
+    // Mengubah query untuk mengambil mold melalui production_orders
+    columns: 'id, schedule_date, production_order_id, machine_id, shift, planned_quantity, actual_quantity, status, notes, production_orders(order_number, product_id, molds(name, mold_code)), machines(name, machine_code)', 
     rolePermissions: ['admin', 'production_manager', 'production_staff']
   });
 
@@ -70,7 +71,7 @@ export default function DailyProductionSchedule() {
     async function fetchRelations() {
       setLoadingRelations(true);
       const [{ data: ordersData }, { data: machinesData }, { data: moldsData }] = await Promise.all([
-        supabase.from('production_orders').select('id, order_number, product_id'),
+        supabase.from('production_orders').select('id, order_number, product_id, mold_id'), // Fetch mold_id from production_orders
         supabase.from('machines').select('id, name, machine_code'),
         supabase.from('molds').select('id, name, mold_code')
       ]);
@@ -96,9 +97,9 @@ export default function DailyProductionSchedule() {
       render: (value: string, item: DailyProductionSchedule) => item.machines?.name || value
     },
     { 
-      key: 'mold_id' as keyof DailyProductionSchedule, 
+      key: 'mold_id' as keyof DailyProductionSchedule, // This key is now accessed via nested object
       label: 'Mold',
-      render: (value: string, item: DailyProductionSchedule) => item.molds?.name || value
+      render: (value: string, item: DailyProductionSchedule) => item.production_orders?.molds?.name || item.mold_id || value // Access nested mold name
     },
     { key: 'shift' as keyof DailyProductionSchedule, label: 'Shift' },
     { 
@@ -172,7 +173,10 @@ export default function DailyProductionSchedule() {
         />
         <ThemedSelect
           value={form.production_order_id || ''}
-          onValueChange={value => setForm(f => ({ ...f, production_order_id: value }))}
+          onValueChange={value => {
+            const selectedOrder = productionOrders.find(order => order.id === value);
+            setForm(f => ({ ...f, production_order_id: value, mold_id: selectedOrder?.mold_id || '' }));
+          }}
           className="mb-2"
           placeholder="Select Production Order"
         >

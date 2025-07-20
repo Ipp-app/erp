@@ -42,8 +42,8 @@ export default function ProductionCosts() {
     handleDelete
   } = useCRUD<ProductionCost>({
     table: 'production_costs',
-    // Sederhanakan query untuk debugging
-    columns: 'id, cost_date, total_cost',
+    // Mengembalikan query ke versi lengkap dengan join
+    columns: 'id, production_order_id, cost_date, material_cost, labor_cost, machine_cost, overhead_cost, total_cost, unit_cost, notes, production_orders(order_number, actual_quantity)',
     rolePermissions: ['admin', 'finance_manager']
   });
 
