@@ -94,7 +94,7 @@ export default function FinishedGoods() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Finished Goods Inventory</h1>
+      {/* <h1 className="text-2xl font-bold mb-4">Finished Goods Inventory</h1> */}
       
       <DataTable
         data={goods}

@@ -92,7 +92,7 @@ export default function SalesOrders() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Sales Orders</h1>
+      {/* <h1 className="text-2xl font-bold mb-4">Sales Orders</h1> */}
       
       <DataTable
         data={orders}
