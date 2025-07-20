@@ -18,7 +18,7 @@ interface MachineDowntime {
   reported_by: string;
   status: string;
   notes: string;
-  // machines?: { name: string } | null; // Removed for now due to potential DB relation issue
+  machines?: { name: string; machine_code: string } | null; // Re-added for joining
 }
 
 interface Machine {
@@ -42,8 +42,8 @@ export default function MachineDowntime() {
     handleDelete
   } = useCRUD<MachineDowntime>({
     table: 'machine_downtime',
-    // Removed 'machines(name, machine_code)' from columns to fix 400 error
-    columns: 'id, machine_id, downtime_start, downtime_end, duration_minutes, reason, action_taken, reported_by, status, notes', 
+    // Re-adding 'machines(name, machine_code)' to columns
+    columns: 'id, machine_id, downtime_start, downtime_end, duration_minutes, reason, action_taken, reported_by, status, notes, machines(name, machine_code)', 
     rolePermissions: ['admin', 'production_manager', 'maintenance_staff']
   });
 
@@ -67,8 +67,8 @@ export default function MachineDowntime() {
   const columns = [
     { 
       key: 'machine_id' as keyof MachineDowntime, 
-      label: 'Machine ID', // Changed label to reflect showing ID
-      // render: (value: string, item: MachineDowntime) => item.machines?.name || value // Removed render for machine name
+      label: 'Machine', // Changed label back to 'Machine'
+      render: (value: string, item: MachineDowntime) => item.machines?.name || value // Re-added render for machine name
     },
     { 
       key: 'downtime_start' as keyof MachineDowntime, 
