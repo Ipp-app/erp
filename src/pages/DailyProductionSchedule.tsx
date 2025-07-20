@@ -56,8 +56,8 @@ export default function DailyProductionSchedule() {
     handleDelete
   } = useCRUD<DailyProductionSchedule>({
     table: 'daily_production_schedule',
-    // Sederhanakan query untuk debugging
-    columns: 'id, schedule_date, status', 
+    // Mengembalikan query lengkap dengan join untuk menampilkan data yang benar
+    columns: 'id, schedule_date, production_order_id, machine_id, mold_id, shift, planned_quantity, actual_quantity, status, notes, production_orders(order_number, product_id), machines(name, machine_code), molds(name, mold_code)', 
     rolePermissions: ['admin', 'production_manager', 'production_staff']
   });
 
