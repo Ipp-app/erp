@@ -3,7 +3,6 @@ import { useCRUD } from '@/hooks/useCRUD';
 import { DataTable } from '@/components/common/DataTable';
 import { FormModal } from '@/components/common/FormModal';
 import ThemedInput from '@/components/ui/ThemedInput';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RawMaterial {
   id: string;
@@ -89,149 +88,146 @@ export default function RawMaterials() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <Card className="m-4">
-      <CardHeader>
-        <CardTitle>Raw Materials Management</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <DataTable
-          data={materials}
-          columns={columns}
-          searchable
-          filterable
-          filterOptions={{ key: 'category', options: categories }}
-          paginated
-          pageSize={10}
-          canEdit={canEdit()}
-          onAdd={() => openForm()}
-          onEdit={openForm}
-          onDelete={handleDelete}
-          addButtonText="Add Material"
-        />
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Raw Materials Management</h1>
+      
+      <DataTable
+        data={materials}
+        columns={columns}
+        searchable
+        filterable
+        filterOptions={{ key: 'category', options: categories }}
+        paginated
+        pageSize={10}
+        canEdit={canEdit()}
+        onAdd={() => openForm()}
+        onEdit={openForm}
+        onDelete={handleDelete}
+        addButtonText="Add Material"
+      />
 
-        <FormModal
-          isOpen={showForm}
-          onClose={closeForm}
-          onSubmit={handleSubmit}
-          title={`${editing ? 'Edit' : 'Add'} Raw Material`}
+      <FormModal
+        isOpen={showForm}
+        onClose={closeForm}
+        onSubmit={handleSubmit}
+        title={`${editing ? 'Edit' : 'Add'} Raw Material`}
+      >
+        <ThemedInput
+          placeholder="Material Code"
+          value={form.material_code || ''}
+          onChange={e => setForm(f => ({ ...f, material_code: e.target.value }))}
+          required
+        />
+        <ThemedInput
+          placeholder="Material Name"
+          value={form.name || ''}
+          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+          required
+        />
+        <ThemedInput
+          placeholder="Description"
+          value={form.description || ''}
+          onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+        />
+        <select
+          className="w-full p-2 mb-2 bg-transparent border rounded-md focus:outline-none focus:ring-2"
+          value={form.category || ''}
+          onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
         >
+          <option value="">Select Category</option>
+          <option value="resin">Resin</option>
+          <option value="colorant">Colorant</option>
+          <option value="additive">Additive</option>
+          <option value="packaging">Packaging</option>
+        </select>
+        <ThemedInput
+          placeholder="Material Type"
+          value={form.material_type || ''}
+          onChange={e => setForm(f => ({ ...f, material_type: e.target.value }))}
+        />
+        <ThemedInput
+          placeholder="Supplier"
+          value={form.supplier || ''}
+          onChange={e => setForm(f => ({ ...f, supplier: e.target.value }))}
+        />
+        <ThemedInput
+          placeholder="Unit of Measure"
+          value={form.unit_of_measure || ''}
+          onChange={e => setForm(f => ({ ...f, unit_of_measure: e.target.value }))}
+        />
+        <div className="grid grid-cols-2 gap-2">
           <ThemedInput
-            placeholder="Material Code"
-            value={form.material_code || ''}
-            onChange={e => setForm(f => ({ ...f, material_code: e.target.value }))}
-            required
-          />
-          <ThemedInput
-            placeholder="Material Name"
-            value={form.name || ''}
-            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-            required
-          />
-          <ThemedInput
-            placeholder="Description"
-            value={form.description || ''}
-            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-          />
-          <select
-            className="w-full p-2 mb-2 bg-transparent border rounded-md focus:outline-none focus:ring-2"
-            value={form.category || ''}
-            onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-          >
-            <option value="">Select Category</option>
-            <option value="resin">Resin</option>
-            <option value="colorant">Colorant</option>
-            <option value="additive">Additive</option>
-            <option value="packaging">Packaging</option>
-          </select>
-          <ThemedInput
-            placeholder="Material Type"
-            value={form.material_type || ''}
-            onChange={e => setForm(f => ({ ...f, material_type: e.target.value }))}
-          />
-          <ThemedInput
-            placeholder="Supplier"
-            value={form.supplier || ''}
-            onChange={e => setForm(f => ({ ...f, supplier: e.target.value }))}
-          />
-          <ThemedInput
-            placeholder="Unit of Measure"
-            value={form.unit_of_measure || ''}
-            onChange={e => setForm(f => ({ ...f, unit_of_measure: e.target.value }))}
-          />
-          <div className="grid grid-cols-2 gap-2">
-            <ThemedInput
-              placeholder="Current Stock"
-              type="number"
-              step="0.01"
-              value={form.current_stock || ''}
-              onChange={e => setForm(f => ({ ...f, current_stock: Number(e.target.value) }))}
-            />
-            <ThemedInput
-              placeholder="Minimum Stock"
-              type="number"
-              step="0.01"
-              value={form.minimum_stock || ''}
-              onChange={e => setForm(f => ({ ...f, minimum_stock: Number(e.target.value) }))}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <ThemedInput
-              placeholder="Maximum Stock"
-              type="number"
-              step="0.01"
-              value={form.maximum_stock || ''}
-              onChange={e => setForm(f => ({ ...f, maximum_stock: Number(e.target.value) }))}
-            />
-            <ThemedInput
-              placeholder="Reorder Point"
-              type="number"
-              step="0.01"
-              value={form.reorder_point || ''}
-              onChange={e => setForm(f => ({ ...f, reorder_point: Number(e.target.value) }))}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <ThemedInput
-              placeholder="Reorder Quantity"
-              type="number"
-              step="0.01"
-              value={form.reorder_quantity || ''}
-              onChange={e => setForm(f => ({ ...f, reorder_quantity: Number(e.target.value) }))}
-            />
-            <ThemedInput
-              placeholder="Unit Cost"
-              type="number"
-              step="0.01"
-              value={form.unit_cost || ''}
-              onChange={e => setForm(f => ({ ...f, unit_cost: Number(e.target.value) }))}
-            />
-          </div>
-          <ThemedInput
-            placeholder="Storage Location"
-            value={form.storage_location || ''}
-            onChange={e => setForm(f => ({ ...f, storage_location: e.target.value }))}
-          />
-          <ThemedInput
-            placeholder="Shelf Life (days)"
+            placeholder="Current Stock"
             type="number"
-            value={form.shelf_life_days || ''}
-            onChange={e => setForm(f => ({ ...f, shelf_life_days: Number(e.target.value) }))}
+            step="0.01"
+            value={form.current_stock || ''}
+            onChange={e => setForm(f => ({ ...f, current_stock: Number(e.target.value) }))}
           />
           <ThemedInput
-            placeholder="Image URL"
-            value={form.image_url || ''}
-            onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
+            placeholder="Minimum Stock"
+            type="number"
+            step="0.01"
+            value={form.minimum_stock || ''}
+            onChange={e => setForm(f => ({ ...f, minimum_stock: Number(e.target.value) }))}
           />
-          <select
-            className="w-full p-2 mb-2 bg-transparent border rounded-md focus:outline-none focus:ring-2"
-            value={form.is_active ? 'true' : 'false'}
-            onChange={e => setForm(f => ({ ...f, is_active: e.target.value === 'true' }))}
-          >
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
-          </select>
-        </FormModal>
-      </CardContent>
-    </Card>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <ThemedInput
+            placeholder="Maximum Stock"
+            type="number"
+            step="0.01"
+            value={form.maximum_stock || ''}
+            onChange={e => setForm(f => ({ ...f, maximum_stock: Number(e.target.value) }))}
+          />
+          <ThemedInput
+            placeholder="Reorder Point"
+            type="number"
+            step="0.01"
+            value={form.reorder_point || ''}
+            onChange={e => setForm(f => ({ ...f, reorder_point: Number(e.target.value) }))}
+          />
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <ThemedInput
+            placeholder="Reorder Quantity"
+            type="number"
+            step="0.01"
+            value={form.reorder_quantity || ''}
+            onChange={e => setForm(f => ({ ...f, reorder_quantity: Number(e.target.value) }))}
+          />
+          <ThemedInput
+            placeholder="Unit Cost"
+            type="number"
+            step="0.01"
+            value={form.unit_cost || ''}
+            onChange={e => setForm(f => ({ ...f, unit_cost: Number(e.target.value) }))}
+          />
+        </div>
+        <ThemedInput
+          placeholder="Storage Location"
+          value={form.storage_location || ''}
+          onChange={e => setForm(f => ({ ...f, storage_location: e.target.value }))}
+        />
+        <ThemedInput
+          placeholder="Shelf Life (days)"
+          type="number"
+          value={form.shelf_life_days || ''}
+          onChange={e => setForm(f => ({ ...f, shelf_life_days: Number(e.target.value) }))}
+        />
+        <ThemedInput
+          placeholder="Image URL"
+          value={form.image_url || ''}
+          onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
+        />
+        <select
+          className="w-full p-2 mb-2 bg-transparent border rounded-md focus:outline-none focus:ring-2"
+          value={form.is_active ? 'true' : 'false'}
+          onChange={e => setForm(f => ({ ...f, is_active: e.target.value === 'true' }))}
+        >
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </FormModal>
+    </div>
   );
 }
