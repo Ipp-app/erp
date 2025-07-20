@@ -11,23 +11,21 @@ interface MaterialBatch {
   id: string;
   batch_number: string;
   material_id: string;
-  quantity_received: number; // Changed from 'quantity'
+  quantity_received: number;
   unit_of_measure: string;
   received_date: string;
   expiry_date: string;
   supplier_id: string;
   unit_cost: number;
-  // total_cost is a derived field, not stored in DB
   storage_location: string;
-  quality_status: string; // Changed from 'status'
+  quality_status: string;
   notes: string;
   raw_materials?: { name: string; material_code: string; unit_of_measure: string } | null;
   suppliers?: { company_name: string } | null;
 }
 
-// Extend MaterialBatch for form state to include total_cost as a temporary field
 interface MaterialBatchForm extends MaterialBatch {
-  total_cost?: number;
+  total_cost?: number; // This is a derived field for the form, not from DB
 }
 
 interface RawMaterial {
@@ -55,9 +53,10 @@ export default function MaterialBatches() {
     closeForm,
     handleSubmit,
     handleDelete
-  } = useCRUD<MaterialBatchForm>({ // Use MaterialBatchForm for CRUD operations
+  } = useCRUD<MaterialBatchForm>({
     table: 'material_batches',
-    columns: 'id, batch_number, material_id, quantity_received, unit_of_measure, received_date, expiry_date, supplier_id, unit_cost, storage_location, quality_status, notes, raw_materials(name, material_code, unit_of_measure), suppliers(company_name)', // Removed total_cost, changed quantity to quantity_received, status to quality_status
+    // Corrected columns: removed 'total_cost', changed 'status' to 'quality_status'
+    columns: 'id, batch_number, material_id, quantity_received, unit_of_measure, received_date, expiry_date, supplier_id, unit_cost, storage_location, quality_status, notes, raw_materials(name, material_code, unit_of_measure), suppliers(company_name)',
     rolePermissions: ['admin', 'warehouse_staff']
   });
 
@@ -99,7 +98,7 @@ export default function MaterialBatches() {
       render: (value: string, item: MaterialBatch) => item.raw_materials?.name || value
     },
     { 
-      key: 'quantity_received' as keyof MaterialBatch, // Changed from 'quantity'
+      key: 'quantity_received' as keyof MaterialBatch,
       label: 'Quantity',
       render: (value: number, item: MaterialBatch) => `${value?.toLocaleString() || '0'} ${item.unit_of_measure || ''}`
     },
@@ -116,13 +115,13 @@ export default function MaterialBatches() {
       render: (value: number) => `$${value?.toFixed(2) || '0.00'}`
     },
     { 
-      key: 'total_cost' as keyof MaterialBatchForm, // Use MaterialBatchForm for rendering total_cost
+      key: 'total_cost' as keyof MaterialBatchForm,
       label: 'Total Cost',
-      render: (value: number, item: MaterialBatchForm) => `$${((item.quantity_received || 0) * (item.unit_cost || 0))?.toFixed(2) || '0.00'}` // Calculate on the fly for display
+      render: (value: number, item: MaterialBatchForm) => `$${((item.quantity_received || 0) * (item.unit_cost || 0))?.toFixed(2) || '0.00'}`
     },
     { key: 'storage_location' as keyof MaterialBatch, label: 'Location' },
     { 
-      key: 'quality_status' as keyof MaterialBatch, // Changed from 'status'
+      key: 'quality_status' as keyof MaterialBatch,
       label: 'Status',
       render: (value: string) => {
         const colors = {
@@ -136,7 +135,7 @@ export default function MaterialBatches() {
     }
   ];
 
-  const statuses = Array.from(new Set(batches.map(b => b.quality_status).filter(Boolean))); // Changed from 'status'
+  const statuses = Array.from(new Set(batches.map(b => b.quality_status).filter(Boolean)));
   const materialNames = Array.from(new Set(batches.map(b => b.raw_materials?.name || '').filter(Boolean)));
 
   if (loading || loadingRelations) return <div>Loading Material Batches...</div>;
@@ -145,10 +144,10 @@ export default function MaterialBatches() {
     <div className="p-4">
       <DataTable
         data={batches}
-        columns={columns as any} // Cast to any to temporarily bypass complex type inference issues
+        columns={columns as any}
         searchable
         filterable
-        filterOptions={{ key: 'quality_status', options: statuses }} // Changed from 'status'
+        filterOptions={{ key: 'quality_status', options: statuses }}
         paginated
         pageSize={10}
         canEdit={canEdit()}
@@ -190,18 +189,18 @@ export default function MaterialBatches() {
           ))}
         </ThemedSelect>
         <ThemedInput
-          placeholder="Quantity Received" // Changed from 'Quantity'
+          placeholder="Quantity Received"
           type="number"
           step="0.01"
-          value={form.quantity_received || ''} // Changed from 'quantity'
-          onChange={e => setForm(f => ({ ...f, quantity_received: Number(e.target.value) }))} // Changed from 'quantity'
+          value={form.quantity_received || ''}
+          onChange={e => setForm(f => ({ ...f, quantity_received: Number(e.target.value) }))}
           required
         />
         <ThemedInput
           placeholder="Unit of Measure"
           value={form.unit_of_measure || ''}
           onChange={e => setForm(f => ({ ...f, unit_of_measure: e.target.value }))}
-          disabled // Unit of measure is now derived from selected material
+          disabled
         />
         <div className="grid grid-cols-2 gap-2">
           <ThemedInput
@@ -242,7 +241,7 @@ export default function MaterialBatches() {
           type="number"
           step="0.01"
           value={form.total_cost || ''}
-          disabled // Total cost is calculated automatically
+          disabled
         />
         <ThemedInput
           placeholder="Storage Location"
@@ -250,8 +249,8 @@ export default function MaterialBatches() {
           onChange={e => setForm(f => ({ ...f, storage_location: e.target.value }))}
         />
         <ThemedSelect
-          value={form.quality_status || 'in_stock'} // Changed from 'status'
-          onValueChange={value => setForm(f => ({ ...f, quality_status: value }))} // Changed from 'status'
+          value={form.quality_status || 'in_stock'}
+          onValueChange={value => setForm(f => ({ ...f, quality_status: value }))}
           className="mb-2"
           placeholder="Select Status"
         >
