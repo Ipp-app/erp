@@ -55,8 +55,8 @@ export default function MaterialBatches() {
     handleDelete
   } = useCRUD<MaterialBatchForm>({
     table: 'material_batches',
-    // Sederhanakan query untuk debugging
-    columns: 'id, batch_number, quality_status', // Hanya ambil kolom dasar
+    // Query disederhanakan untuk debugging masalah 400 Bad Request
+    columns: 'id, batch_number, quality_status', 
     rolePermissions: ['admin', 'warehouse_staff']
   });
 
