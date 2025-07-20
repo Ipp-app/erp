@@ -13,7 +13,7 @@ interface DailyProductionSchedule {
   production_order_id: string;
   machine_id: string;
   mold_id: string; // Keep this for form handling, even if fetched via join
-  shift: string; // Changed from 'shift_id' to 'shift' to match the 400 Bad Request error
+  shift_id: string; // Corrected back to 'shift_id'
   planned_quantity: number;
   actual_quantity: number;
   status: string;
@@ -64,8 +64,8 @@ export default function DailyProductionSchedule() {
     handleDelete
   } = useCRUD<DailyProductionSchedule>({
     table: 'daily_production_schedule',
-    // Mengubah query untuk menggunakan 'shift' dan mengambil mold melalui production_orders serta shift_name melalui production_shifts
-    columns: 'id, schedule_date, production_order_id, machine_id, shift, planned_quantity, actual_quantity, status, notes, production_orders(order_number, product_id, molds(name, mold_code)), machines(name, machine_code), production_shifts(shift_name)', 
+    // Mengubah query untuk menggunakan 'shift_id' dan mengambil mold melalui production_orders serta shift_name melalui production_shifts
+    columns: 'id, schedule_date, production_order_id, machine_id, shift_id, planned_quantity, actual_quantity, status, notes, production_orders(order_number, product_id, molds(name, mold_code)), machines(name, machine_code), production_shifts(shift_name)', 
     rolePermissions: ['admin', 'production_manager', 'production_staff']
   });
 
@@ -112,7 +112,7 @@ export default function DailyProductionSchedule() {
       render: (value: string, item: DailyProductionSchedule) => item.production_orders?.molds?.name || item.mold_id || value // Access nested mold name
     },
     { 
-      key: 'shift' as keyof DailyProductionSchedule, // Changed key to shift
+      key: 'shift_id' as keyof DailyProductionSchedule, // Corrected key to shift_id
       label: 'Shift',
       render: (value: string, item: DailyProductionSchedule) => item.production_shifts?.shift_name || value // Render shift_name
     },
@@ -225,8 +225,8 @@ export default function DailyProductionSchedule() {
           ))}
         </ThemedSelect>
         <ThemedSelect
-          value={form.shift || ''} // Changed to shift
-          onValueChange={value => setForm(f => ({ ...f, shift: value }))} // Changed to shift
+          value={form.shift_id || ''} // Corrected to shift_id
+          onValueChange={value => setForm(f => ({ ...f, shift_id: value }))} // Corrected to shift_id
           className="mb-2"
           placeholder="Select Shift"
         >
